@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metrics-app-deployment
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/vsai97/metrics-app-repo
+    targetRevision: main
+    path: metrics-app
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          className: "nginx"
+          hosts:
+            - host: localhost
+              paths:
+                - path: /
+                  pathType: Prefix
+        env:
+          PASSWORD: MYPASSWORD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true  
