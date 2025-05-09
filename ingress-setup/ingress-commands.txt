@@ -1,0 +1,6 @@
+1. Install nginx ingress controller manifests
+    Command: kubectl apply -k "https://github.com/kubernetes/ingress-nginx/config/default?ref=main"
+2. Wait for ingress controller pods to be ready:
+    Command: kubectl get pods -n ingress-nginx --watch
+3. Port forward the nginx ingress controller's HTTP port:
+    Command: kubectl port-forward -n ingress-nginx service/ingress-nginx-controller 80:80 --address 0.0.0.0 &
